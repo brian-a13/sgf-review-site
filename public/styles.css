@@ -1,0 +1,9 @@
+.scrollable-table {
+    max-height: 700px;
+    overflow-y: auto;
+    width: 80%;
+    margin: 0 auto;
+    margin-bottom: 10px;
+    border: 5px solid #000000; /* Optional border for better visibility */ 
+    border-radius: 10px; 
+}
