@@ -7,6 +7,44 @@
     <title>SGF Food Reviews</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="styles.css" rel="stylesheet" />
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+          const form = document.getElementById("reviewForm");
+          const messageDiv = document.getElementById("message");
+
+          form.addEventListener("submit", async function (event) {
+              event.preventDefault(); // Prevent default form submission
+
+              const formData = new FormData(form);
+              const data = Object.fromEntries(formData.entries());
+
+              try {
+                  const response = await fetch("/reviews/submit-review", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify(data),
+                  });
+
+                  if (response.ok) {
+                      messageDiv.innerText = "Review submitted successfully!";
+                      messageDiv.style.color = "green";
+
+                      setTimeout(() => {
+                          messageDiv.innerText = "";
+                          form.reset(); // Clear form fields
+                          location.reload(); // Reload page after delay
+                      }, 1500);
+                  } else {
+                      messageDiv.innerText = "Error submitting review.";
+                      messageDiv.style.color = "red";
+                  }
+              } catch (error) {
+                  messageDiv.innerText = "Network error, please try again.";
+                  messageDiv.style.color = "red";
+              }
+          });
+      });
+  </script>
 </head>
 <body>
     <header>
@@ -66,10 +104,34 @@
               </tbody>
           </table>
         </div>
+        <div class="container mt-5 pb-5">
+          <h2 class="mb-4">Submit Your Review</h2>
+          <form action="/reviews/submit-review" method="POST" id="reviewForm">
+              <div class="mb-3">
+                <label for="restaurant" class="form-label">Restaurant</label>
+                <input type="text" class="form-control" id="restaurant" name="restaurant" placeholder="Enter the name of the restaurant" required>
+              </div>
+              <div class="mb-3">
+                  <label for="location" class="form-label">Location</label>
+                  <input type="text" class="form-control" id="location" name="location" placeholder="In which city is the location situated?" required>
+              </div>
+              <div class="mb-3">
+                <label for="rating" class="form-label">Rating</label>
+                <input type="number" class="form-control" id="rating" name="rating" min="0" max ="10" step="0.1" placeholder="Enter your rating" required>
+            </div>
+              <div class="mb-3">
+                  <label for="review" class="form-label">Your Review</label>
+                  <textarea class="form-control" id="review" name="review" rows="5" placeholder="Write your review here..." required></textarea>
+              </div>
+              <div class="mb-3">
+                <label for="name" class="form-label">Your Name</label>
+                <input type="text" class="form-control" id="name" name="name" placeholder="Enter your name" required>
+            </div>
+              <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+          <div id="message"></div> 
+      </div>
     </main>
-    <footer>
-        &copy; 2024 SGF Food Review. All rights reserved.
-    </footer>
 
      <!-- Bootstrap JS and Popper.js CDN -->
      <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
