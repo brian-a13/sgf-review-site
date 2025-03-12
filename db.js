@@ -1,5 +1,7 @@
 const { Client } = require('pg');
-require('dotenv').config();
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+}
 
 // Connect to CockroachDB using environment variables for security
 const client = new Client({
